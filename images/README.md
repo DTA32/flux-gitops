@@ -18,7 +18,7 @@ the `images` Kustomization, which only reads registries and so is never suspende
 Every pipeline pushes two tags:
 
     ${CI_COMMIT_SHA:0:7}                          e.g. 3d895b7              for people and rollback
-    ${CI_PIPELINE_STARTED}-${CI_COMMIT_SHA:0:7}   e.g. 1756180000-3d895b7   what Flux sorts on
+    ${CI_PIPELINE_CREATED}-${CI_COMMIT_SHA:0:7}   e.g. 1756180000-3d895b7   what Flux sorts on
 
 and every policy uses the same filter:
 
@@ -29,7 +29,9 @@ and every policy uses the same filter:
       numerical:
         order: asc
 
-A bare sha has no order Flux can use, which is why the timestamp is there. Pipelines publish only
+A bare sha has no order Flux can use, which is why the timestamp is there. It has to be
+`CI_PIPELINE_CREATED`: Woodpecker compiles the pipeline config before the pipeline starts, so
+`CI_PIPELINE_STARTED` is always `0` at that point. Pipelines publish only
 from their default branch, so a feature branch can never win the election; the bandung repos
 publish `master` to `/prod` and `dev` to `/dev`.
 
