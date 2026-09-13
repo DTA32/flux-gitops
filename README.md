@@ -96,6 +96,9 @@ Then, against the target cluster:
   (`kubectl get secret flux-system -n flux-system`), never the token.
 - Bootstrap commits `clusters/dta32-kube/flux-system/` to `master`, and image automation keeps
   committing there, so `git pull` before editing locally.
+- `clusters/dta32-kube/flux-system/` needs `gotk-components.yaml` and `gotk-sync.yaml` next to
+  the pre-seeded `kustomization.yaml`, even as empty placeholders — bootstrap overwrites them.
+  Without them the install step fails with `accumulating resources from 'gotk-sync.yaml'`.
 
 **Moving from another cluster?** Stop the old one first, or both will reconcile and both will
 push image bumps:
