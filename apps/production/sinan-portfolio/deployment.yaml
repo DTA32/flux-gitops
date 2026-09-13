@@ -15,6 +15,16 @@ spec:
       labels:
         app: sinan-portfolio
     spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: node_type
+                    operator: In
+                    values:
+                      - high-availability
       containers:
         - name: sinan-portfolio
           image: ghcr.io/pt-sinan-akbar/sinan-portfolio:5f0906b8686fdc8550ffaeadd3a09c7b7829982a
