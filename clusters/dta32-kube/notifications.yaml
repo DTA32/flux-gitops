@@ -24,6 +24,9 @@ spec:
       name: '*'
   eventMetadata:
     summary: dta32-kube
+  exclusionList:
+    # a dependant reconciled a second before its dependency on a new commit; clears in 30s
+    - "Dependencies do not meet ready condition"
 ---
 apiVersion: notification.toolkit.fluxcd.io/v1beta3
 kind: Alert
@@ -45,3 +48,8 @@ spec:
       name: '*'
   eventMetadata:
     summary: dta32-kube
+  exclusionList:
+    # TEMPORARY: no <ts>-<sha> tags exist yet, so every policy reports this on every
+    # registry scan. Remove once every enabled repo publishes timestamp tags - after
+    # that, this message means a policy genuinely lost all its matching tags.
+    - "version list argument cannot be empty"
