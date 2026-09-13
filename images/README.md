@@ -41,7 +41,8 @@ anonymous tag listing is rate limited, so the secret is not optional. Copy
 
 ## Notes
 
-- A policy reports `no image found` until its repo has built once with this tag scheme.
+- A policy reports `version list argument cannot be empty` until its repo has built once with
+  this tag scheme — no tag matches the filter yet. It clears on the first such build.
 - `flux get image policy -A` shows the newest elected tag for everything.
 - End to end is up to ~16 minutes (registry scan, then automation, then Git poll). To hurry:
   `flux reconcile image repository <name>` then `flux reconcile image update flux-system`.

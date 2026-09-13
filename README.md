@@ -201,7 +201,8 @@ database URL pointing at `postgres-postgis-service.prod.svc.cluster.local`:
     kubectl get certificate -n envoy                 # READY True per hostname
     flux get image policy -A
 
-A policy reports `no image found` until its repo has built once with the `<ts>-<sha>` scheme.
+A policy reports `version list argument cannot be empty` until its repo has built once with the
+`<ts>-<sha>` scheme — Flux's way of saying no tag matched the filter yet.
 When one does, check the tag really has a timestamp prefix: `-3d895b7` with nothing before the
 dash means `${CI_PIPELINE_STARTED}` did not resolve in Woodpecker, and nothing will deploy.
 
@@ -258,7 +259,10 @@ Plain secrets:
 
 Basic auth:
 
-    htpasswd -cbB /tmp/auth.htpasswd <user> '<password>'
+`-s` matters: Envoy Gateway only accepts `{SHA}` hashes. A bcrypt (`-B`) entry makes the
+`SecurityPolicy` invalid, and Envoy Gateway fails closed — every request to that route gets a 500.
+
+    htpasswd -cbs /tmp/auth.htpasswd <user> '<password>'
     kubectl create secret generic <secret-name> -n envoy --from-file=.htpasswd=/tmp/auth.htpasswd
     rm /tmp/auth.htpasswd
 
