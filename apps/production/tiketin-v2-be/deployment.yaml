@@ -1,0 +1,146 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: prod
+  name: tiketin-v2-be
+  labels:
+    app: tiketin-v2-be
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tiketin-v2-be
+  template:
+    metadata:
+      labels:
+        app: tiketin-v2-be
+    spec:
+      containers:
+        - name: tiketin-v2-be
+          image: docker.io/dta32/tiketin-v2-be:2e679c7
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          env:
+            - name: APP_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: tiketin-v2-be-config
+                  key: APP_NAME
+            - name: APP_ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: tiketin-v2-be-config
+                  key: APP_ENV
+            - name: APP_DEBUG
+              valueFrom:
+                configMapKeyRef:
+                  name: tiketin-v2-be-config
+                  key: APP_DEBUG
+            - name: APP_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: tiketin-v2-be-config
+                  key: APP_URL
+            - name: SESSION_DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  name: tiketin-v2-be-config
+                  key: SESSION_DOMAIN
+            - name: SANCTUM_STATEFUL_DOMAINS
+              valueFrom:
+                configMapKeyRef:
+                  name: tiketin-v2-be-config
+                  key: SANCTUM_STATEFUL_DOMAINS
+            - name: LOG_CHANNEL
+              valueFrom:
+                configMapKeyRef:
+                  name: tiketin-v2-be-config
+                  key: LOG_CHANNEL
+            - name: LOG_DEPRECATIONS_CHANNEL
+              valueFrom:
+                configMapKeyRef:
+                  name: tiketin-v2-be-config
+                  key: LOG_DEPRECATIONS_CHANNEL
+            - name: LOG_LEVEL
+              valueFrom:
+                configMapKeyRef:
+                  name: tiketin-v2-be-config
+                  key: LOG_LEVEL
+            - name: BROADCAST_DRIVER
+              valueFrom:
+                configMapKeyRef:
+                  name: tiketin-v2-be-config
+                  key: BROADCAST_DRIVER
+            - name: CACHE_DRIVER
+              valueFrom:
+                configMapKeyRef:
+                  name: tiketin-v2-be-config
+                  key: CACHE_DRIVER
+            - name: FILESYSTEM_DRIVER
+              valueFrom:
+                configMapKeyRef:
+                  name: tiketin-v2-be-config
+                  key: FILESYSTEM_DRIVER
+            - name: QUEUE_CONNECTION
+              valueFrom:
+                configMapKeyRef:
+                  name: tiketin-v2-be-config
+                  key: QUEUE_CONNECTION
+            - name: SESSION_DRIVER
+              valueFrom:
+                configMapKeyRef:
+                  name: tiketin-v2-be-config
+                  key: SESSION_DRIVER
+            - name: SESSION_LIFETIME
+              valueFrom:
+                configMapKeyRef:
+                  name: tiketin-v2-be-config
+                  key: SESSION_LIFETIME
+            - name: APP_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: tiketin-v2-be-secret
+                  key: APP_KEY
+            - name: DB_CONNECTION
+              valueFrom:
+                secretKeyRef:
+                  name: tiketin-v2-be-secret
+                  key: DB_CONNECTION
+            - name: DB_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: tiketin-v2-be-secret
+                  key: DB_DATABASE
+            - name: DB_FOREIGN_KEYS
+              valueFrom:
+                secretKeyRef:
+                  name: tiketin-v2-be-secret
+                  key: DB_FOREIGN_KEYS
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: tiketin-v2-be-secret
+                  key: DB_HOST
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: tiketin-v2-be-secret
+                  key: DB_PASSWORD
+            - name: DB_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: tiketin-v2-be-secret
+                  key: DB_PORT
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: tiketin-v2-be-secret
+                  key: DB_USERNAME

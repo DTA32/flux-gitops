@@ -1,0 +1,25 @@
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: kawan-ngonser-fe
+  namespace: flux-system
+spec:
+  image: docker.io/dta32/kawan-ngonser-frontend
+  interval: 10m
+  secretRef:
+    name: flux-registry-creds
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: kawan-ngonser-fe
+  namespace: flux-system
+spec:
+  imageRepositoryRef:
+    name: kawan-ngonser-fe
+  filterTags:
+    pattern: '^(?P<ts>[0-9]+)-[0-9a-f]{7}$'
+    extract: '$ts'
+  policy:
+    numerical:
+      order: asc

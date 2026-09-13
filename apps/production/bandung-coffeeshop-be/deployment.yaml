@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: prod
+  name: bandung-coffeeshop-be
+  labels:
+    app: bandung-coffeeshop-be
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: bandung-coffeeshop-be
+  template:
+    metadata:
+      labels:
+        app: bandung-coffeeshop-be
+    spec:
+      containers:
+        - name: bandung-coffeeshop-be
+          image: ghcr.io/dta32/bandung-coffeeshop-be/prod:a70fc30 # {"$imagepolicy": "flux-system:bandung-coffeeshop-be"}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 7005
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 7005
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 7005
+            initialDelaySeconds: 10
+            periodSeconds: 20
+            timeoutSeconds: 2
+            failureThreshold: 3
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          env:
+            - name: APP_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: bandung-coffeeshop-be-config
+                  key: APP_PORT
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: bandung-coffeeshop-be-config
+                  key: DB_HOST
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: bandung-coffeeshop-be-config
+                  key: DB_PORT
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: bandung-coffeeshop-be-secret
+                  key: DB_USER
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: bandung-coffeeshop-be-secret
+                  key: DB_NAME
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: bandung-coffeeshop-be-secret
+                  key: DB_PASSWORD

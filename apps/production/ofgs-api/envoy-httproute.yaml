@@ -1,0 +1,21 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: ofgs-api
+  namespace: envoy
+spec:
+  parentRefs:
+    - name: main-gateway
+      namespace: envoy
+      sectionName: dfgs-api
+  hostnames:
+    - api.dfgs.dta32.my.id
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: ofgs-api-service
+          namespace: prod
+          port: 80

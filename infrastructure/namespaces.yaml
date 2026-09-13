@@ -1,0 +1,20 @@
+# The two application namespaces. They live in `infrastructure` so that the dependency
+# chain (infrastructure -> data-* -> apps-*) guarantees they exist before anything tries
+# to land in them.
+#
+# `envoy`, `envoy-gateway-system`, `cert-manager` and `woodpecker` are NOT here: envoy is
+# created by envoy-gateway/namespace.yaml, woodpecker by woodpecker/namespace.yaml, and
+# the other two by their Helm installs.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: prod
+  labels:
+    environment: production
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dev
+  labels:
+    environment: development

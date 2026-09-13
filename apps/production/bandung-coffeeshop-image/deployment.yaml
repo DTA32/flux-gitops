@@ -1,0 +1,102 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: prod
+  name: bandung-coffeeshop-image
+  labels:
+    app: bandung-coffeeshop-image
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: bandung-coffeeshop-image
+  template:
+    metadata:
+      labels:
+        app: bandung-coffeeshop-image
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: node_type
+                    operator: In
+                    values:
+                      - high-availability
+      containers:
+        - name: bandung-coffeeshop-image
+          image: ghcr.io/dta32/bandung-coffeeshop-image:b119d69
+          imagePullPolicy: IfNotPresent
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 20
+            timeoutSeconds: 2
+            failureThreshold: 3
+          resources:
+            requests:
+              memory: "500Mi"
+              cpu: "500m"
+            limits:
+              memory: "1Gi"
+              cpu: "1"
+          ports:
+            - containerPort: 8000
+          env:
+            - name: WEB_CONCURRENCY
+              valueFrom:
+                configMapKeyRef:
+                  name: bandung-coffeeshop-image-config
+                  key: WEB_CONCURRENCY
+            - name: R2_ACCOUNT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: bandung-coffeeshop-image-secret
+                  key: R2_ACCOUNT_ID
+            - name: R2_BUCKET
+              valueFrom:
+                configMapKeyRef:
+                  name: bandung-coffeeshop-image-config
+                  key: R2_BUCKET
+            - name: WATERMARK_KEY
+              valueFrom:
+                configMapKeyRef:
+                  name: bandung-coffeeshop-image-config
+                  key: WATERMARK_KEY
+            - name: WATERMARK_BYPASS
+              valueFrom:
+                configMapKeyRef:
+                  name: bandung-coffeeshop-image-config
+                  key: WATERMARK_BYPASS
+            - name: R2_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: bandung-coffeeshop-image-secret
+                  key: R2_ACCESS_KEY_ID
+            - name: R2_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: bandung-coffeeshop-image-secret
+                  key: R2_SECRET_ACCESS_KEY
+            - name: RENDER_CONCURRENCY
+              valueFrom:
+                configMapKeyRef:
+                  name: bandung-coffeeshop-image-config
+                  key: RENDER_CONCURRENCY

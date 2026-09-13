@@ -1,0 +1,14 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - gotk-components.yaml
+  - gotk-sync.yaml
+patches:
+  - patch: |
+      - op: add
+        path: /spec/template/spec/nodeSelector
+        value:
+          node_type: high-availability
+    target:
+      kind: Deployment
+      labelSelector: app.kubernetes.io/part-of=flux

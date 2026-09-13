@@ -1,0 +1,39 @@
+# Workloads, one Kustomization per environment. Each path is a single kustomize build -
+# see apps/README.md for why that is required rather than tidy.
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: apps-production
+  namespace: flux-system
+spec:
+  suspend: true
+  interval: 30m
+  retryInterval: 2m
+  timeout: 10m
+  dependsOn:
+    - name: data-production
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  path: ./apps/production
+  prune: true
+  wait: false
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: apps-development
+  namespace: flux-system
+spec:
+  suspend: true
+  interval: 30m
+  retryInterval: 2m
+  timeout: 10m
+  dependsOn:
+    - name: data-development
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  path: ./apps/development
+  prune: true
+  wait: false

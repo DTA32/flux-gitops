@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: prod
+  name: ofgs-api
+  labels:
+    app: ofgs-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ofgs-api
+  template:
+    metadata:
+      labels:
+        app: ofgs-api
+    spec:
+      containers:
+        - name: ofgs-api
+          image: docker.io/dta32/ofgs-api:3d895b7 # {"$imagepolicy": "flux-system:ofgs-api"}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          env:
+            - name: SERVER_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: ofgs-api-secret
+                  key: SERVER_PORT
+            - name: API_PREFIX
+              valueFrom:
+                secretKeyRef:
+                  name: ofgs-api-secret
+                  key: API_PREFIX
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: ofgs-api-secret
+                  key: DATABASE_URL

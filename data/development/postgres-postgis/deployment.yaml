@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: dev
+  name: postgres-postgis
+  labels:
+    app: postgres-postgis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-postgis
+  template:
+    metadata:
+      labels:
+        app: postgres-postgis
+    spec:
+      containers:
+        - name: postgres-postgis
+          image: imresamu/postgis:17-3.5-bookworm
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5432
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-postgis-secret
+                  key: POSTGRES_PASSWORD
+            - name: PGDATA
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-postgis-secret
+                  key: PGDATA
+          volumeMounts:
+            - name: postgres-postgis-storage
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: postgres-postgis-storage
+          persistentVolumeClaim:
+            claimName: postgres-postgis-pvc

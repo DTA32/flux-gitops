@@ -1,0 +1,21 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: sinan-portfolio
+  namespace: envoy
+spec:
+  parentRefs:
+    - name: main-gateway
+      namespace: envoy
+      sectionName: sinan-portfolio
+  hostnames:
+    - sinanaas.my.id
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: sinan-portfolio-service
+          namespace: prod
+          port: 80

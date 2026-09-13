@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: prod
+  name: skripsi
+  labels:
+    app: skripsi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: skripsi
+  template:
+    metadata:
+      labels:
+        app: skripsi
+    spec:
+      containers:
+        - name: skripsi
+          image: ghcr.io/pt-sinan-akbar/be-clustering:e120c7
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
+            limits:
+              memory: "1Gi"
+              cpu: "1500m"
+          env:
+            - name: DB_SEED
+              valueFrom:
+                configMapKeyRef:
+                  name: skripsi-config
+                  key: DB_SEED
+            - name: POSTGRES_URL
+              valueFrom:
+                secretKeyRef:
+                  name: skripsi-secret
+                  key: POSTGRES_URL

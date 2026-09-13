@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: prod
+  name: split-bill-be
+  labels:
+    app: split-bill-be
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: split-bill-be
+  template:
+    metadata:
+      labels:
+        app: split-bill-be
+    spec:
+      containers:
+        - name: split-bill-be
+          image: ghcr.io/pt-sinan-akbar/split-bills-be:9586653 # {"$imagepolicy": "flux-system:split-bill-be"}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          env:
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: split-bill-be-config
+                  key: PORT
+            - name: GIN_MODE
+              valueFrom:
+                configMapKeyRef:
+                  name: split-bill-be-config
+                  key: GIN_MODE
+            - name: POSTGRES_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: split-bill-be-config
+                  key: POSTGRES_HOST
+            - name: POSTGRES_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: split-bill-be-config
+                  key: POSTGRES_PORT
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  key: POSTGRES_USER
+                  name: split-bill-be-secret
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: POSTGRES_PASSWORD
+                  name: split-bill-be-secret
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  key: POSTGRES_DB
+                  name: split-bill-be-secret
+            - name: GEMINI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: GEMINI_API_KEY
+                  name: split-bill-be-secret

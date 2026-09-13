@@ -1,0 +1,83 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  namespace: prod
+  name: sinan-gotth-finance-db-backup
+spec:
+  # Suspended, matching the live CronJob (suspended by hand on 2026-08-23). The nightly
+  # postgres-backup-r2 job already dumps the gotth_finance database to R2, so this one is
+  # redundant. Leaving `suspend` out would silently switch it back on at cutover.
+  # To retire it for good, delete this directory's backup-*.yaml files instead.
+  suspend: true
+  schedule: "0 3 * * *"            # daily at 03:00
+  timeZone: "Asia/Jakarta"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          nodeSelector:
+            node_type: high-availability
+          containers:
+            - name: pg-backup
+              image: postgres:17-alpine
+              env:
+                - name: POSTGRES_HOST
+                  valueFrom:
+                    configMapKeyRef:
+                      name: sinan-gotth-finance-config
+                      key: POSTGRES_HOST
+                - name: POSTGRES_PORT
+                  valueFrom:
+                    configMapKeyRef:
+                      name: sinan-gotth-finance-config
+                      key: POSTGRES_PORT
+                - name: POSTGRES_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: sinan-gotth-finance-secret
+                      key: POSTGRES_USER
+                - name: POSTGRES_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: sinan-gotth-finance-secret
+                      key: POSTGRES_PASSWORD
+                - name: POSTGRES_DB
+                  valueFrom:
+                    secretKeyRef:
+                      name: sinan-gotth-finance-secret
+                      key: POSTGRES_DB
+                - name: BACKUP_RETENTION
+                  value: "14"
+              command: ["/bin/sh", "-c"]
+              args:
+                - |
+                  set -eu
+                  OUT_DIR=/backups
+                  RETENTION="${BACKUP_RETENTION:-14}"
+                  mkdir -p "$OUT_DIR"
+                  TS=$(date +%Y%m%d-%H%M%S)
+                  FILE="$OUT_DIR/${POSTGRES_DB}-${TS}.sql.gz"
+                  echo "[backup] dumping ${POSTGRES_DB} from ${POSTGRES_HOST}:${POSTGRES_PORT} -> ${FILE}"
+                  if PGPASSWORD="$POSTGRES_PASSWORD" pg_dump -h "$POSTGRES_HOST" -p "$POSTGRES_PORT" -U "$POSTGRES_USER" "$POSTGRES_DB" | gzip > "$FILE"; then
+                    echo "[backup] ok: ${FILE}"
+                  else
+                    echo "[backup] FAILED" >&2
+                    rm -f "$FILE"
+                    exit 1
+                  fi
+                  # keep only the newest $RETENTION dumps
+                  ls -1t "$OUT_DIR"/${POSTGRES_DB}-*.sql.gz 2>/dev/null | tail -n +$((RETENTION + 1)) | while read -r old; do
+                    echo "[backup] pruning ${old}"
+                    rm -f "$old"
+                  done
+              volumeMounts:
+                - name: backups
+                  mountPath: /backups
+          volumes:
+            - name: backups
+              persistentVolumeClaim:
+                claimName: sinan-gotth-finance-backup-pvc

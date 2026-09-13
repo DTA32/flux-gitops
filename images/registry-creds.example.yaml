@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: flux-registry-creds
+  namespace: flux-system
+type: kubernetes.io/dockerconfigjson
+stringData:
+  .dockerconfigjson: |
+    {
+      "auths": {
+        "https://index.docker.io/v1/": { "auth": "<base64 of dta32:dockerhub-token>" },
+        "ghcr.io":                     { "auth": "<base64 of DTA32:ghcr-pat>" }
+      }
+    }

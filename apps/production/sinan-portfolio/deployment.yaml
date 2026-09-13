@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: prod
+  name: sinan-portfolio
+  labels:
+    app: sinan-portfolio
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sinan-portfolio
+  template:
+    metadata:
+      labels:
+        app: sinan-portfolio
+    spec:
+      containers:
+        - name: sinan-portfolio
+          image: ghcr.io/pt-sinan-akbar/sinan-portfolio:5f0906b8686fdc8550ffaeadd3a09c7b7829982a
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "50m"
+            limits:
+              memory: "256Mi"
+              cpu: "250m"

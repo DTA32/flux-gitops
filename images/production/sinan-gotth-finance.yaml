@@ -1,0 +1,28 @@
+# NOT ghcr.io/sinanaas/gotth-finance, which the pipeline used to push to and which
+# returns denied/absent. This is the package the Deployment actually runs, and
+# sinan/gotth-finance/.woodpecker.yml was repointed here to match.
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: sinan-gotth-finance
+  namespace: flux-system
+spec:
+  image: ghcr.io/pt-sinan-akbar/gotth-finance-app
+  interval: 10m
+  secretRef:
+    name: flux-registry-creds
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: sinan-gotth-finance
+  namespace: flux-system
+spec:
+  imageRepositoryRef:
+    name: sinan-gotth-finance
+  filterTags:
+    pattern: '^(?P<ts>[0-9]+)-[0-9a-f]{7}$'
+    extract: '$ts'
+  policy:
+    numerical:
+      order: asc
