@@ -201,11 +201,6 @@ database URL pointing at `postgres-postgis-service.prod.svc.cluster.local`:
     kubectl get certificate -n envoy                 # READY True per hostname
     flux get image policy -A
 
-A policy reports `version list argument cannot be empty` until its repo has built once with the
-`<ts>-<sha>` scheme — Flux's way of saying no tag matched the filter yet.
-When one does, check the tag really has a timestamp prefix: `-3d895b7` with nothing before the
-dash means `${CI_PIPELINE_STARTED}` did not resolve in Woodpecker, and nothing will deploy.
-
 ## Day-to-day
 
 - **Deploy an automated image** (list in [images/README.md](images/README.md)): push to the app
