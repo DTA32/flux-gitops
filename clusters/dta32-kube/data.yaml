@@ -23,7 +23,7 @@ metadata:
   name: data-development
   namespace: flux-system
 spec:
-  suspend: true
+  suspend: false
   interval: 30m
   retryInterval: 2m
   timeout: 10m
