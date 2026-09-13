@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: prod
+  name: kawan-ngonser-fe
+  labels:
+    app: kawan-ngonser-fe
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kawan-ngonser-fe
+  template:
+    metadata:
+      labels:
+        app: kawan-ngonser-fe
+    spec:
+      containers:
+        - name: kawan-ngonser-fe
+          image: docker.io/dta32/kawan-ngonser-frontend:6679947 # {"$imagepolicy": "flux-system:kawan-ngonser-fe"}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "50m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"

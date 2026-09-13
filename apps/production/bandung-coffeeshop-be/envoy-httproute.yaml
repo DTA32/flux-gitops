@@ -1,0 +1,27 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: bandung-coffeeshop-be
+  namespace: envoy
+spec:
+  parentRefs:
+    - name: main-gateway
+      namespace: envoy
+      sectionName: bdgcafe-com
+  hostnames:
+    - bdgcafe.com
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /api
+      filters:
+        - type: URLRewrite
+          urlRewrite:
+            path:
+              type: ReplacePrefixMatch
+              replacePrefixMatch: /
+      backendRefs:
+        - name: bandung-coffeeshop-be-service
+          namespace: prod
+          port: 80

@@ -1,0 +1,21 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: bandung-coffeeshop-fe-dev
+  namespace: envoy
+spec:
+  parentRefs:
+    - name: main-gateway
+      namespace: envoy
+      sectionName: dev-bdgcafe-com
+  hostnames:
+    - dev.bdgcafe.com
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: bandung-coffeeshop-fe-service
+          namespace: dev
+          port: 80

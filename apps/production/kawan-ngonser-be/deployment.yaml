@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: prod
+  name: kawan-ngonser-be
+  labels:
+    app: kawan-ngonser-be
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kawan-ngonser-be
+  template:
+    metadata:
+      labels:
+        app: kawan-ngonser-be
+    spec:
+      containers:
+        - name: kawan-ngonser-be
+          image: docker.io/dta32/kawan-ngonser-backend:v1.0.2 # {"$imagepolicy": "flux-system:kawan-ngonser-be"}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3001
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          env:
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: kawan-ngonser-be-config
+                  key: DB_NAME
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: kawan-ngonser-be-config
+                  key: PORT
+            - name: MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: kawan-ngonser-be-secret
+                  key: MONGODB_URI

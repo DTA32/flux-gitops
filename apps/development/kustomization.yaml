@@ -1,0 +1,12 @@
+# The dev environment: bandung-coffeeshop only, one replica each, behind basic auth on
+# dev.bdgcafe.com, talking to the disposable postgres in data/development.
+#
+# One kustomize build, for the same reason apps/production is — the ConfigMaps are
+# hash-suffixed and kustomize only rewrites references to them within a single build.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - configmap
+  - bandung-coffeeshop-be
+  - bandung-coffeeshop-fe

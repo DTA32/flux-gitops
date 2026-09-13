@@ -1,0 +1,80 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: postgres-backup-r2
+  namespace: prod
+  labels:
+    app: postgres-backup-r2
+spec:
+  schedule: "0 3 * * *"
+  timeZone: "Asia/Jakarta"
+  concurrencyPolicy: Forbid
+  startingDeadlineSeconds: 7200
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      activeDeadlineSeconds: 3600
+      template:
+        metadata:
+          labels:
+            app: postgres-backup-r2
+        spec:
+          restartPolicy: OnFailure
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 10001
+            runAsGroup: 10001
+            fsGroup: 10001
+          containers:
+            - name: backup
+              image: docker.io/dta32/postgresql-backup-r2:50efddbb
+              imagePullPolicy: Always
+              args: ["/app/backup.sh"]
+              env:
+                - name: POSTGRES_HOST
+                  value: postgres-postgis-service.prod.svc.cluster.local
+                - name: POSTGRES_PORT
+                  value: "5432"
+                - name: POSTGRES_USER
+                  value: postgres
+                - name: POSTGRES_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: postgres-postgis-secret
+                      key: POSTGRES_PASSWORD
+                - name: POSTGRES_DATABASE
+                  value: "each"
+                - name: POSTGRES_EXCLUDE
+                  value: "postgres"
+                - name: DUMP_FORMAT
+                  value: "plain"
+                - name: RETENTION_DAYS
+                  value: "7"
+                - name: R2_PREFIX
+                  value: "postgres"
+                - name: TZ
+                  value: "Asia/Jakarta"
+              envFrom:
+                - secretRef:
+                    name: postgres-backup-r2-secret
+              volumeMounts:
+                - name: work
+                  mountPath: /work
+              resources:
+                requests:
+                  memory: "128Mi"
+                  cpu: "100m"
+                limits:
+                  memory: "512Mi"
+                  cpu: "1"
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities:
+                  drop: ["ALL"]
+          volumes:
+            - name: work
+              emptyDir:
+                sizeLimit: 5Gi

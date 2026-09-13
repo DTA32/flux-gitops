@@ -1,0 +1,106 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: prod
+  name: sinan-gotth-finance
+  labels:
+    app: sinan-gotth-finance
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sinan-gotth-finance
+  template:
+    metadata:
+      labels:
+        app: sinan-gotth-finance
+    spec:
+      containers:
+        - name: sinan-gotth-finance
+          image: ghcr.io/pt-sinan-akbar/gotth-finance-app:497b788
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8081
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+          env:
+            - name: POSTGRES_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: sinan-gotth-finance-config
+                  key: POSTGRES_HOST
+            - name: POSTGRES_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: sinan-gotth-finance-config
+                  key: POSTGRES_PORT
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: sinan-gotth-finance-config
+                  key: PORT
+            - name: ACCESS_TOKEN_EXPIRED_IN
+              valueFrom:
+                configMapKeyRef:
+                  name: sinan-gotth-finance-config
+                  key: ACCESS_TOKEN_EXPIRED_IN
+            - name: REFRESH_TOKEN_EXPIRED_IN
+              valueFrom:
+                configMapKeyRef:
+                  name: sinan-gotth-finance-config
+                  key: REFRESH_TOKEN_EXPIRED_IN
+            - name: ACCESS_TOKEN_MAXAGE
+              valueFrom:
+                configMapKeyRef:
+                  name: sinan-gotth-finance-config
+                  key: ACCESS_TOKEN_MAXAGE
+            - name: REFRESH_TOKEN_MAXAGE
+              valueFrom:
+                configMapKeyRef:
+                  name: sinan-gotth-finance-config
+                  key: REFRESH_TOKEN_MAXAGE
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: sinan-gotth-finance-secret
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: sinan-gotth-finance-secret
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: sinan-gotth-finance-secret
+                  key: POSTGRES_DB
+            - name: SESSION_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: sinan-gotth-finance-secret
+                  key: SESSION_SECRET_KEY
+            - name: ACCESS_TOKEN_PRIVATE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: sinan-gotth-finance-secret
+                  key: ACCESS_TOKEN_PRIVATE_KEY
+            - name: ACCESS_TOKEN_PUBLIC_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: sinan-gotth-finance-secret
+                  key: ACCESS_TOKEN_PUBLIC_KEY
+            - name: REFRESH_TOKEN_PRIVATE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: sinan-gotth-finance-secret
+                  key: REFRESH_TOKEN_PRIVATE_KEY
+            - name: REFRESH_TOKEN_PUBLIC_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: sinan-gotth-finance-secret
+                  key: REFRESH_TOKEN_PUBLIC_KEY

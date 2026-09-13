@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: prod
+  name: tiketin-v2-fe
+  labels:
+    app: tiketin-v2-fe
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tiketin-v2-fe
+  template:
+    metadata:
+      labels:
+        app: tiketin-v2-fe
+    spec:
+      containers:
+        - name: tiketin-v2-fe
+          image: docker.io/dta32/tiketin-v2-fe:0f2f5fd
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80

@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: dev
+  name: bandung-coffeeshop-fe
+  labels:
+    app: bandung-coffeeshop-fe
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bandung-coffeeshop-fe
+  template:
+    metadata:
+      labels:
+        app: bandung-coffeeshop-fe
+    spec:
+      containers:
+        - name: bandung-coffeeshop-fe
+          image: ghcr.io/dta32/bandung-coffeeshop-fe/dev:36f6123 # {"$imagepolicy": "flux-system:bandung-coffeeshop-fe-dev"}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 20
+            timeoutSeconds: 3
+            failureThreshold: 3
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 100m
+              memory: 256Mi
+          env:
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: bandung-coffeeshop-fe-config
+                  key: PORT
+            - name: VITE_API_BASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: bandung-coffeeshop-fe-config
+                  key: VITE_API_BASE_URL
+            - name: ASSET_PRELOAD_VERBOSE_LOGGING
+              valueFrom:
+                configMapKeyRef:
+                  name: bandung-coffeeshop-fe-config
+                  key: ASSET_PRELOAD_VERBOSE_LOGGING
+            - name: READINESS_CHECK_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: bandung-coffeeshop-fe-config
+                  key: READINESS_CHECK_URL

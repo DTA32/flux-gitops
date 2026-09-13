@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: prod
+  name: bandung-coffeeshop-be-service
+spec:
+  selector:
+    app: bandung-coffeeshop-be
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80
+      targetPort: 7005
+      protocol: TCP

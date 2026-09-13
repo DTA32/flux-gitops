@@ -1,0 +1,177 @@
+# The single entrypoint, in the `envoy` namespace. One HTTP:80 listener (ACME +
+# future redirect) and one HTTPS:443 listener per hostname. cert-manager watches
+# the annotation and fills each certificateRefs Secret (in this namespace) with a
+# Let's Encrypt cert for that listener's hostname.
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: main-gateway
+  namespace: envoy
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  gatewayClassName: envoy-gateway
+  listeners:
+    - name: http
+      protocol: HTTP
+      port: 80
+      allowedRoutes:
+        namespaces:
+          from: Same
+
+    - name: bdgcafe-com
+      protocol: HTTPS
+      port: 443
+      hostname: bdgcafe.com
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - kind: Secret
+            name: bdgcafe-com-tls
+      allowedRoutes:
+        namespaces:
+          from: Same
+
+    - name: dev-bdgcafe-com
+      protocol: HTTPS
+      port: 443
+      hostname: dev.bdgcafe.com
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - kind: Secret
+            name: dev-bdgcafe-com-tls
+      allowedRoutes:
+        namespaces:
+          from: Same
+
+    - name: image-bdgcafe-com
+      protocol: HTTPS
+      port: 443
+      hostname: image.bdgcafe.com
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - kind: Secret
+            name: image-bdgcafe-com-tls
+      allowedRoutes:
+        namespaces:
+          from: Same
+
+    - name: splitbill-api
+      protocol: HTTPS
+      port: 443
+      hostname: api.splitbill.dta32.my.id
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - kind: Secret
+            name: api-splitbill-tls
+      allowedRoutes:
+        namespaces:
+          from: Same
+
+    - name: skrispi-api
+      protocol: HTTPS
+      port: 443
+      hostname: api.skrispi.mraditya.my.id
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - kind: Secret
+            name: api-skrispi-tls
+      allowedRoutes:
+        namespaces:
+          from: Same
+
+    - name: dfgs-api
+      protocol: HTTPS
+      port: 443
+      hostname: api.dfgs.dta32.my.id
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - kind: Secret
+            name: api-dfgs-tls
+      allowedRoutes:
+        namespaces:
+          from: Same
+
+    - name: vern
+      protocol: HTTPS
+      port: 443
+      hostname: vern.dta32.my.id
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - kind: Secret
+            name: vern-tls
+      allowedRoutes:
+        namespaces:
+          from: Same
+
+    - name: tiketin-api
+      protocol: HTTPS
+      port: 443
+      hostname: api.tiketin.dta32.my.id
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - kind: Secret
+            name: api-tiketin-tls
+      allowedRoutes:
+        namespaces:
+          from: Same
+
+    - name: kawan
+      protocol: HTTPS
+      port: 443
+      hostname: kawan-ngonser.dta32.my.id
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - kind: Secret
+            name: kawan-tls
+      allowedRoutes:
+        namespaces:
+          from: Same
+
+    - name: ci
+      protocol: HTTPS
+      port: 443
+      hostname: ci.dta32.my.id
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - kind: Secret
+            name: ci-tls
+      allowedRoutes:
+        namespaces:
+          from: Same
+
+    # --- Sinan's projects ---
+    - name: sinan-portfolio
+      protocol: HTTPS
+      port: 443
+      hostname: sinanaas.my.id
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - kind: Secret
+            name: sinan-portfolio-tls
+      allowedRoutes:
+        namespaces:
+          from: Same
+
+    - name: sinan-gotth-finance
+      protocol: HTTPS
+      port: 443
+      hostname: gotth-finance.sinanaas.my.id
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - kind: Secret
+            name: sinan-gotth-finance-tls
+      allowedRoutes:
+        namespaces:
+          from: Same

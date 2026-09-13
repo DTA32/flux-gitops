@@ -1,0 +1,20 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - configmap
+  - bandung-coffeeshop-be
+  - bandung-coffeeshop-fe
+  - bandung-coffeeshop-image
+  - skripsi
+  - job-scraper
+  - kawan-ngonser-be
+  - kawan-ngonser-fe
+  - ofgs-api
+  - postgres-backup-r2
+  - sinan-gotth-finance
+  - sinan-portfolio
+  - split-bill-be
+  - tiketin-v2-be
+  - vern
+#  - tiketin-v2-fe # served by cloudflare worker

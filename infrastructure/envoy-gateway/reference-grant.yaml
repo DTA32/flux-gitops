@@ -1,0 +1,30 @@
+# HTTPRoutes live in `envoy`; the Services they point at live in `prod` and `dev`.
+# Gateway API blocks a cross-namespace backendRef unless the TARGET namespace grants it,
+# so there is one grant per application namespace.
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: ReferenceGrant
+metadata:
+  name: envoy-routes-to-prod-services
+  namespace: prod
+spec:
+  from:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      namespace: envoy
+  to:
+    - group: ""
+      kind: Service
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: ReferenceGrant
+metadata:
+  name: envoy-routes-to-dev-services
+  namespace: dev
+spec:
+  from:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      namespace: envoy
+  to:
+    - group: ""
+      kind: Service

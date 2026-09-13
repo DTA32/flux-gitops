@@ -1,0 +1,34 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+configMapGenerator:
+  - name: bandung-coffeeshop-be-config
+    namespace: prod
+    envs: [bandung-coffeeshop-be.env]
+  - name: bandung-coffeeshop-fe-config
+    namespace: prod
+    envs: [bandung-coffeeshop-fe.env]
+  - name: bandung-coffeeshop-image-config
+    namespace: prod
+    envs: [bandung-coffeeshop-image.env]
+  - name: skripsi-config
+    namespace: prod
+    envs: [skripsi.env]
+  - name: job-scraper-config
+    namespace: prod
+    envs: [job-scraper.env]
+  - name: kawan-ngonser-be-config
+    namespace: prod
+    envs: [kawan-ngonser-be.env]
+  - name: sinan-gotth-finance-config
+    namespace: prod
+    envs: [sinan-gotth-finance.env]
+  - name: split-bill-be-config
+    namespace: prod
+    envs: [split-bill-be.env]
+  - name: tiketin-v2-be-config
+    namespace: prod
+    envs: [tiketin-v2-be.env]
+  - name: vern-config
+    namespace: prod
+    envs: [vern.env]

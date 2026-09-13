@@ -1,0 +1,25 @@
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: tiketin-v2-be
+  namespace: flux-system
+spec:
+  image: docker.io/dta32/tiketin-v2-be
+  interval: 10m
+  secretRef:
+    name: flux-registry-creds
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: tiketin-v2-be
+  namespace: flux-system
+spec:
+  imageRepositoryRef:
+    name: tiketin-v2-be
+  filterTags:
+    pattern: '^(?P<ts>[0-9]+)-[0-9a-f]{7}$'
+    extract: '$ts'
+  policy:
+    numerical:
+      order: asc
