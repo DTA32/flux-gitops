@@ -27,7 +27,7 @@ spec:
                       - spot
       containers:
         - name: job-scraper-mcp
-          image: ghcr.io/pt-sinan-akbar/job-scraper-mcp:c908aa76
+          image: ghcr.io/pt-sinan-akbar/job-scraper-mcp:ab3ab6f8
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
