@@ -23,7 +23,7 @@ spec:
                           - high-availability
           containers:
             - name: job-scraper-bot
-              image: ghcr.io/pt-sinan-akbar/job-scraper-bot:8da373fb
+              image: ghcr.io/pt-sinan-akbar/job-scraper-bot:c908aa76
               imagePullPolicy: IfNotPresent
               command:
                 - /bin/sh
