@@ -32,7 +32,7 @@ spec:
                       - high-availability
       containers:
         - name: bandung-coffeeshop-image
-          image: ghcr.io/dta32/bandung-coffeeshop-image:b119d69
+          image: ghcr.io/dta32/bandung-coffeeshop-image:b119d69 # {"$imagepolicy": "flux-system:bandung-coffeeshop-image"}
           imagePullPolicy: IfNotPresent
           readinessProbe:
             httpGet:
