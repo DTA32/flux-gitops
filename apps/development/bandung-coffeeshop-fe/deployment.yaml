@@ -65,3 +65,8 @@ spec:
                 configMapKeyRef:
                   name: bandung-coffeeshop-fe-config
                   key: READINESS_CHECK_URL
+            - name: API_INTERNAL_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: bandung-coffeeshop-fe-config
+                  key: API_INTERNAL_URL
