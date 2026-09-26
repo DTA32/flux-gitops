@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: bandung-coffeeshop-be
-          image: ghcr.io/dta32/bandung-coffeeshop-be/dev:1790419919-aba4966 # {"$imagepolicy": "flux-system:bandung-coffeeshop-be-dev"}
+          image: ghcr.io/dta32/bandung-coffeeshop-be/dev:1790447069-6acb99a # {"$imagepolicy": "flux-system:bandung-coffeeshop-be-dev"}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 7005
