@@ -1,7 +1,17 @@
-# The write-back half: reads every ImagePolicy, rewrites the tag on any image line
-# carrying a `# {"$imagepolicy": ...}` marker, and pushes the commit straight to master.
-# The GitRepository it pushes through is the one `flux bootstrap --read-write-key`
-# creates, so the deploy key must have write access.
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: flux-system-app
+  namespace: flux-system
+spec:
+  interval: 5m
+  url: https://github.com/DTA32/flux-gitops   # must be HTTPS, not ssh://
+  ref:
+    branch: master
+  provider: github
+  secretRef:
+    name: flux-github-app
+---
 apiVersion: image.toolkit.fluxcd.io/v1
 kind: ImageUpdateAutomation
 metadata:
@@ -12,15 +22,15 @@ spec:
   interval: 5m
   sourceRef:
     kind: GitRepository
-    name: flux-system
+    name: flux-system-app
   git:
     checkout:
       ref:
         branch: master
     commit:
       author:
-        email: fluxcdbot@users.noreply.github.com
-        name: fluxcdbot
+        email: 190590078+dta32-homeserver[bot]@users.noreply.github.com
+        name: dta32-homeserver[bot]
       messageTemplate: |
         chore(images): automated tag bump
 
