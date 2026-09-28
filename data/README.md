@@ -54,7 +54,7 @@ in-cluster through the ClusterIP `redis-service:6379` (plus `redis-headless` gov
 StatefulSet). The production pod is pinned to `node_type: high-availability` so it stays up with
 the always-on apps; the dev one lands anywhere.
 
-Used by `bandung-coffeeshop-be` (`REDIS_ADDR` in its ConfigMap) to cache the current weather for
+Used by `bandung-coffeeshop-be` (`REDIS_HOST` in its ConfigMap) to cache the current weather for
 30 minutes.
 
 ### Rollout
@@ -88,7 +88,7 @@ Used by `bandung-coffeeshop-be` (`REDIS_ADDR` in its ConfigMap) to cache the cur
 
 - Both instances answer as `postgres-postgis-service` (and `redis-service`) inside their own
   namespace, which is why the dev and prod ConfigMaps can share the same `DB_HOST` and
-  `REDIS_ADDR`.
+  `REDIS_HOST`.
 - **Redis is bumped by hand** too (`redis:7.4-alpine`, upstream, not under image automation).
 - **The image is bumped by hand.** `imresamu/postgis` is upstream and not under image automation.
   Upgrade the backup image's Postgres client alongside it — `pg_dump` refuses to dump a server
