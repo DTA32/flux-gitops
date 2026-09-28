@@ -54,8 +54,8 @@ in-cluster through the ClusterIP `redis-service:6379` (plus `redis-headless` gov
 StatefulSet). The production pod is pinned to `node_type: high-availability` so it stays up with
 the always-on apps; the dev one lands anywhere.
 
-Used by `bandung-coffeeshop-be` (`REDIS_HOST` in its ConfigMap) to cache the current weather for
-30 minutes.
+Used by `bandung-coffeeshop-be` (`REDIS_HOST` / `REDIS_PORT` in its ConfigMap) to cache the
+current weather for 30 minutes.
 
 ### Rollout
 

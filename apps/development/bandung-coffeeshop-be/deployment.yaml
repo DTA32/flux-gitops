@@ -80,6 +80,11 @@ spec:
                 configMapKeyRef:
                   name: bandung-coffeeshop-be-config
                   key: REDIS_HOST
+            - name: REDIS_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: bandung-coffeeshop-be-config
+                  key: REDIS_PORT
             # optional: the pod still starts before the key is added to the
             # secret; weather=current searches just skip the weather filter.
             - name: WEATHERAPI_KEY
