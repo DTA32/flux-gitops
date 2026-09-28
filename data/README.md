@@ -7,8 +7,8 @@ Flux Kustomization.
 |---|---|---|---|
 | `production/postgres-postgis/` | `prod` | hostPath PV at `/mnt/data/postgres-postgis`, 10Gi | `data-production` |
 | `development/postgres-postgis/` | `dev` | dynamic `local-path` claim, 5Gi | `data-development` |
-| `production/redis/` | `prod` | none (in-memory cache) | `data-production` |
-| `development/redis/` | `dev` | none (in-memory cache) | `data-development` |
+| `production/redis/` | `prod` | dynamic `local-path` claim per pod, 1Gi | `data-production` |
+| `development/redis/` | `dev` | dynamic `local-path` claim per pod, 1Gi | `data-development` |
 
 **Why not inside `apps/`:** a bad reconcile or a stray `prune` under `apps` must never be able to
 reach a database. Each `apps-*` Kustomization `dependsOn` its `data-*`, so nothing that needs
@@ -47,12 +47,20 @@ expects:
 
 ## redis
 
-A cache, not a store: a single-replica StatefulSet running `redis:7.4-alpine` with persistence off
-(`--save "" --appendonly no`) and `--maxmemory 64mb --maxmemory-policy allkeys-lru`. Losing it only
-means a cold cache, so there is no volume, no backup and no password — it is reachable only
-in-cluster through the ClusterIP `redis-service:6379` (plus `redis-headless` governing the
-StatefulSet). The production pod is pinned to `node_type: high-availability` so it stays up with
-the always-on apps; the dev one lands anywhere.
+A cache, not a store: a single-replica StatefulSet running `redis:7.4-alpine` with
+`--maxmemory 64mb --maxmemory-policy allkeys-lru`. It persists with AOF only
+(`--appendonly yes --appendfsync everysec`, RDB snapshots off via `--save ""`) to a
+`volumeClaimTemplates` claim `data-redis-0` on `local-path`, so the cache survives pod restarts and
+at most about a second of writes is lost on a crash. Losing the volume only means a cold cache, so
+there is no backup and no password — it is reachable only in-cluster through the ClusterIP
+`redis-service:6379` (plus `redis-headless` governing the StatefulSet).
+
+- **Pinned by its volume.** `local-path` volumes carry node affinity, so the pod always returns to the
+  node that holds its AOF. The production pod is additionally pinned to
+  `node_type: high-availability` so it stays up with the always-on apps; the dev one lands wherever
+  its claim was first provisioned.
+- **The claim outlives the StatefulSet.** Deleting or pruning the StatefulSet keeps `data-redis-0`;
+  `kubectl delete pvc data-redis-0` (with the pod gone) is what actually discards the data.
 
 Used by `bandung-coffeeshop-be` (`REDIS_HOST` / `REDIS_PORT` in its ConfigMap) to cache the
 current weather for 30 minutes.
@@ -78,6 +86,8 @@ current weather for 30 minutes.
 
        kubectl -n prod get statefulset redis                       # READY 1/1
        kubectl -n prod exec redis-0 -- redis-cli ping              # PONG
+       kubectl -n prod get pvc data-redis-0                        # Bound
+       kubectl -n prod exec redis-0 -- redis-cli config get appendonly   # yes
        kubectl -n prod logs deploy/bandung-coffeeshop-be | grep -i redis   # "redis connected"
        # after one weather=current search:
        kubectl -n prod exec redis-0 -- redis-cli ttl bdgcafe:weather:bandung   # <= 1800

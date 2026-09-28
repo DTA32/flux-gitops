@@ -22,13 +22,16 @@ spec:
         - name: redis
           image: redis:7.4-alpine
           imagePullPolicy: IfNotPresent
-          # Cache only: nothing is persisted, and the oldest keys are evicted
-          # once maxmemory is reached. A restart just means a cold cache.
+          # Persisted with AOF only (fsync every second, RDB snapshots off) so
+          # the cache survives restarts; the oldest keys are evicted once
+          # maxmemory is reached.
           args:
             - --save
             - ""
             - --appendonly
-            - "no"
+            - "yes"
+            - --appendfsync
+            - everysec
             - --maxmemory
             - 64mb
             - --maxmemory-policy
@@ -36,6 +39,9 @@ spec:
           ports:
             - name: redis
               containerPort: 6379
+          volumeMounts:
+            - name: data
+              mountPath: /data
           readinessProbe:
             exec:
               command: ["redis-cli", "ping"]
@@ -54,3 +60,14 @@ spec:
               cpu: "25m"
             limits:
               memory: "128Mi"
+  # local-path volumes are node-local and carry node affinity, so the pod
+  # stays on the node that holds its AOF.
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: local-path
+        resources:
+          requests:
+            storage: 1Gi
