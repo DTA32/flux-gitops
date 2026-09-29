@@ -22,9 +22,6 @@ spec:
         - name: redis
           image: redis:7.4-alpine
           imagePullPolicy: IfNotPresent
-          # Persisted with AOF only (fsync every second, RDB snapshots off) so
-          # the cache survives restarts; the oldest keys are evicted once
-          # maxmemory is reached.
           args:
             - --save
             - ""
@@ -60,8 +57,6 @@ spec:
               cpu: "25m"
             limits:
               memory: "128Mi"
-  # local-path volumes are node-local and carry node affinity, so the pod
-  # stays on the node that holds its AOF.
   volumeClaimTemplates:
     - metadata:
         name: data
