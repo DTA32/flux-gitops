@@ -1,11 +1,14 @@
 # data
 
-Postgres, one instance per environment, each reconciled by its own Flux Kustomization.
+Postgres and Redis, one instance of each per environment, each environment reconciled by its own
+Flux Kustomization.
 
-| Path | Namespace | Storage | Kustomization |
-|---|---|---|---|
-| `production/postgres-postgis/` | `prod` | hostPath PV at `/mnt/data/postgres-postgis`, 10Gi | `data-production` |
-| `development/postgres-postgis/` | `dev` | dynamic `local-path` claim, 5Gi | `data-development` |
+| Path                            | Namespace | Storage                                           | Kustomization      |
+|---------------------------------|-----------|---------------------------------------------------|--------------------|
+| `production/postgres-postgis/`  | `prod`    | hostPath PV at `/mnt/data/postgres-postgis`, 10Gi | `data-production`  |
+| `development/postgres-postgis/` | `dev`     | dynamic `local-path` claim, 5Gi                   | `data-development` |
+| `production/redis/`             | `prod`    | dynamic `local-path` claim per pod, 1Gi           | `data-production`  |
+| `development/redis/`            | `dev`     | dynamic `local-path` claim per pod, 1Gi           | `data-development` |
 
 **Why not inside `apps/`:** a bad reconcile or a stray `prune` under `apps` must never be able to
 reach a database. Each `apps-*` Kustomization `dependsOn` its `data-*`, so nothing that needs
@@ -42,10 +45,50 @@ expects:
 
 **Secret:** `postgres-postgis-secret` in `dev` — `POSTGRES_PASSWORD`, `PGDATA`.
 
+## redis
+
+A cache, not a store: a single-replica StatefulSet running `redis:7.4-alpine` with
+`--maxmemory 64mb --maxmemory-policy allkeys-lru`. It persists with AOF only (`--appendonly yes --appendfsync everysec`,
+RDB snapshots off via `--save ""`) to a `volumeClaimTemplates` claim `data-redis-0` on `local-path`, so the cache
+survives pod restarts and at most about a second of writes is lost on a crash. Losing the volume only means a cold
+cache, so there is no backup and no password — it is reachable only in-cluster through the ClusterIP`redis-service:6379`
+(plus `redis-headless` governing the StatefulSet).
+
+### Rollout
+
+1. Add the WeatherAPI key to the backend secret in each namespace (the Deployment marks it
+   `optional`, so pods start without it — weather searches just skip the weather filter):
+
+       kubectl -n prod patch secret bandung-coffeeshop-be-secret \
+         -p '{"stringData":{"WEATHERAPI_KEY":"<key>"}}'
+       kubectl -n dev patch secret bandung-coffeeshop-be-secret \
+         -p '{"stringData":{"WEATHERAPI_KEY":"<key>"}}'
+
+2. Reconcile data first, then apps (apps `dependsOn` data, so this also works in one go):
+
+       flux reconcile kustomization data-production --with-source
+       flux reconcile kustomization data-development
+       flux reconcile kustomization apps-production
+       flux reconcile kustomization apps-development
+
+3. Verify:
+
+       kubectl -n prod get statefulset redis                       # READY 1/1
+       kubectl -n prod exec redis-0 -- redis-cli ping              # PONG
+       kubectl -n prod get pvc data-redis-0                        # Bound
+       kubectl -n prod exec redis-0 -- redis-cli config get appendonly   # yes
+       kubectl -n prod logs deploy/bandung-coffeeshop-be | grep -i redis   # "redis connected"
+       # after one weather=current search:
+       kubectl -n prod exec redis-0 -- redis-cli ttl bdgcafe:weather:bandung   # <= 1800
+
+   Repeat with `-n dev`.
+
 ## Notes
 
-- Both instances answer as `postgres-postgis-service` inside their own namespace, which is why the
-  dev and prod ConfigMaps can share the same `DB_HOST`.
+- Both instances answer as `postgres-postgis-service` (and `redis-service`) inside their own
+  namespace, which is why the dev and prod ConfigMaps can share the same `DB_HOST` and
+  `REDIS_HOST`.
+- **Redis is bumped by hand** too (`redis:7.4-alpine`, upstream, not under image automation).
 - **The image is bumped by hand.** `imresamu/postgis` is upstream and not under image automation.
   Upgrade the backup image's Postgres client alongside it — `pg_dump` refuses to dump a server
   newer than itself. See

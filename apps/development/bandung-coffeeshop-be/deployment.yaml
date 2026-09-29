@@ -75,3 +75,19 @@ spec:
                 secretKeyRef:
                   name: bandung-coffeeshop-be-secret
                   key: DB_PASSWORD
+            - name: REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: bandung-coffeeshop-be-config
+                  key: REDIS_HOST
+            - name: REDIS_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: bandung-coffeeshop-be-config
+                  key: REDIS_PORT
+            - name: WEATHERAPI_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: bandung-coffeeshop-be-secret
+                  key: WEATHERAPI_KEY
+                  optional: true
