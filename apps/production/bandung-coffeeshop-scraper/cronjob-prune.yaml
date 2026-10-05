@@ -1,0 +1,40 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  namespace: prod
+  name: bandung-coffeeshop-scraper-prune
+spec:
+  schedule: "0 4 * * 0"
+  timeZone: "Asia/Jakarta"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      activeDeadlineSeconds: 3600
+      template:
+        metadata:
+          labels:
+            app: bandung-coffeeshop-scraper
+        spec:
+          nodeSelector:
+            node_type: spot
+          restartPolicy: Never
+          containers:
+            - name: bandung-coffeeshop-scraper
+              image: ghcr.io/dta32/bandung-coffeeshop-scraper/prod:latest # {"$imagepolicy": "flux-system:bandung-coffeeshop-scraper"}
+              imagePullPolicy: IfNotPresent
+              args: ["prune"]
+              resources:
+                requests:
+                  memory: "32Mi"
+                  cpu: "20m"
+                limits:
+                  memory: "256Mi"
+                  cpu: "500m"
+              envFrom:
+                - configMapRef:
+                    name: bandung-coffeeshop-scraper-config
+                - secretRef:
+                    name: bandung-coffeeshop-scraper-secret

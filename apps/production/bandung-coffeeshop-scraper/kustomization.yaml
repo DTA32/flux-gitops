@@ -1,0 +1,7 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - cronjob-gmaps.yaml
+  - cronjob-instagram.yaml
+  - cronjob-linktree.yaml
+  - cronjob-prune.yaml
