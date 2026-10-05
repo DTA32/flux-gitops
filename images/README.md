@@ -5,7 +5,7 @@ the `images` Kustomization, which only reads registries and so is never suspende
 
 | Path | |
 |---|---|
-| `production/` | Six enabled pairs, named after the app (`ofgs-api`, …) |
+| `production/` | The enabled pairs, named after the app (`ofgs-api`, …) |
 | `development/` | Two pairs, suffixed `-dev` — every policy lives in `flux-system`, so names must be unique |
 
 - **ImageRepository** polls a registry every 10 minutes and caches its tags.
@@ -37,7 +37,7 @@ publish `master` to `/prod` and `dev` to `/dev`.
 
 ## Credentials
 
-All eight repositories use `flux-registry-creds`. Three of the images are on Docker Hub, where
+Every repository uses `flux-registry-creds`. Three of the images are on Docker Hub, where
 anonymous tag listing is rate limited, so the secret is not optional. Copy
 `registry-creds.example.yaml`, fill it in, and apply it by hand; read-only scope is enough.
 

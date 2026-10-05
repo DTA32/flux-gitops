@@ -3,6 +3,7 @@ kind: Kustomization
 
 resources:
   - configmap
+  - bandung-coffeeshop-admin
   - bandung-coffeeshop-be
   - bandung-coffeeshop-fe
   - bandung-coffeeshop-image

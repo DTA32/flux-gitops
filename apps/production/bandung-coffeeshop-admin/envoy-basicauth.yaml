@@ -1,0 +1,13 @@
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: SecurityPolicy
+metadata:
+  name: bdgcafe-mission-control-basicauth
+  namespace: envoy
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: bandung-coffeeshop-admin
+  basicAuth:
+    users:
+      name: bdgcafe-mission-control-basic-auth
