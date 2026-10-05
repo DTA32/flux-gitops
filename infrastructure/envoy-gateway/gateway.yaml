@@ -58,6 +58,19 @@ spec:
         namespaces:
           from: Same
 
+    - name: mission-control-bdgcafe-com
+      protocol: HTTPS
+      port: 443
+      hostname: mission-control.bdgcafe.com
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - kind: Secret
+            name: mission-control-bdgcafe-com-tls
+      allowedRoutes:
+        namespaces:
+          from: Same
+
     - name: splitbill-api
       protocol: HTTPS
       port: 443
