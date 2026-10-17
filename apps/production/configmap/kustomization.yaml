@@ -14,6 +14,9 @@ configMapGenerator:
   - name: bandung-coffeeshop-image-config
     namespace: prod
     envs: [bandung-coffeeshop-image.env]
+  - name: bandung-coffeeshop-scraper-config
+    namespace: prod
+    envs: [bandung-coffeeshop-scraper.env]
   - name: skripsi-config
     namespace: prod
     envs: [skripsi.env]

@@ -7,6 +7,7 @@ resources:
   - bandung-coffeeshop-be
   - bandung-coffeeshop-fe
   - bandung-coffeeshop-image
+  - bandung-coffeeshop-scraper
   - skripsi
   - job-scraper
   - kawan-ngonser-be
