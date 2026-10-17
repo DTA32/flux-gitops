@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: prod
+  name: bandung-coffeeshop-admin
+  labels:
+    app: bandung-coffeeshop-admin
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: bandung-coffeeshop-admin
+  template:
+    metadata:
+      labels:
+        app: bandung-coffeeshop-admin
+    spec:
+      containers:
+        - name: bandung-coffeeshop-admin
+          image: ghcr.io/dta32/bandung-coffeeshop-admin/prod:latest # {"$imagepolicy": "flux-system:bandung-coffeeshop-admin"}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 20
+            timeoutSeconds: 2
+            failureThreshold: 3
+          resources:
+            requests:
+              memory: "32Mi"
+              cpu: "20m"
+            limits:
+              memory: "128Mi"
+              cpu: "250m"
+          envFrom:
+            - configMapRef:
+                name: bandung-coffeeshop-admin-config
+            - secretRef:
+                name: bandung-coffeeshop-admin-secret
