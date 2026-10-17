@@ -21,6 +21,8 @@ spec:
           nodeSelector:
             node_type: spot
           restartPolicy: Never
+          imagePullSecrets:
+            - name: ghcr-pull
           containers:
             - name: bandung-coffeeshop-scraper
               image: ghcr.io/dta32/bandung-coffeeshop-scraper/prod:1792234205-3ecbb0a # {"$imagepolicy": "flux-system:bandung-coffeeshop-scraper"}
