@@ -23,7 +23,7 @@ spec:
           restartPolicy: Never
           containers:
             - name: bandung-coffeeshop-scraper
-              image: ghcr.io/dta32/bandung-coffeeshop-scraper/prod:latest # {"$imagepolicy": "flux-system:bandung-coffeeshop-scraper"}
+              image: ghcr.io/dta32/bandung-coffeeshop-scraper/prod:1792234205-3ecbb0a # {"$imagepolicy": "flux-system:bandung-coffeeshop-scraper"}
               imagePullPolicy: IfNotPresent
               args: ["run", "--source=instagram"]
               resources:
