@@ -25,7 +25,7 @@ spec:
             - name: ghcr-pull
           containers:
             - name: bandung-coffeeshop-scraper
-              image: ghcr.io/dta32/bandung-coffeeshop-scraper/prod:1792271649-5d8a68b # {"$imagepolicy": "flux-system:bandung-coffeeshop-scraper"}
+              image: ghcr.io/dta32/bandung-coffeeshop-scraper/prod:1792271841-685b566 # {"$imagepolicy": "flux-system:bandung-coffeeshop-scraper"}
               imagePullPolicy: IfNotPresent
               args: ["run", "--source=linktree"]
               resources:
