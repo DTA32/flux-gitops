@@ -4,7 +4,7 @@ metadata:
   namespace: prod
   name: bandung-coffeeshop-scraper-instagram
 spec:
-  schedule: "0 3 * * *"
+  schedule: "0 23 * * *"
   timeZone: "Asia/Jakarta"
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 3
