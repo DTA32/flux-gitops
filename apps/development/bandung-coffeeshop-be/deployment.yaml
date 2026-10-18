@@ -91,3 +91,25 @@ spec:
                   name: bandung-coffeeshop-be-secret
                   key: WEATHERAPI_KEY
                   optional: true
+            - name: GOOGLE_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: bandung-coffeeshop-be-secret
+                  key: GOOGLE_CLIENT_ID
+                  optional: true
+            - name: GOOGLE_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: bandung-coffeeshop-be-secret
+                  key: GOOGLE_CLIENT_SECRET
+                  optional: true
+            - name: PUBLIC_BASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: bandung-coffeeshop-be-config
+                  key: PUBLIC_BASE_URL
+            - name: ALLOWED_ORIGINS
+              valueFrom:
+                configMapKeyRef:
+                  name: bandung-coffeeshop-be-config
+                  key: ALLOWED_ORIGINS
