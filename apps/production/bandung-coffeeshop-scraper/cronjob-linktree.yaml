@@ -4,7 +4,7 @@ metadata:
   namespace: prod
   name: bandung-coffeeshop-scraper-linktree
 spec:
-  schedule: "0 6 * * *"
+  schedule: "0 4 * * *"
   timeZone: "Asia/Jakarta"
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 3

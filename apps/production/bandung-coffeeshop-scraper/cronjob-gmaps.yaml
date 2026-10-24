@@ -4,7 +4,7 @@ metadata:
   namespace: prod
   name: bandung-coffeeshop-scraper-gmaps
 spec:
-  schedule: "0 22 * * *"
+  schedule: "0 0 * * *"
   timeZone: "Asia/Jakarta"
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 3
