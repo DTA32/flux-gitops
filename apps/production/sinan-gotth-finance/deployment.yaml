@@ -6,7 +6,7 @@ metadata:
   labels:
     app: sinan-gotth-finance
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       app: sinan-gotth-finance
