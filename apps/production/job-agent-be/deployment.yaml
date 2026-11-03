@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: prod
+  name: job-agent-be
+  labels:
+    app: job-agent-be
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: job-agent-be
+  template:
+    metadata:
+      labels:
+        app: job-agent-be
+    spec:
+      imagePullSecrets:
+        - name: ghcr-pull
+      containers:
+        - name: job-agent-be
+          image: ghcr.io/dta32/job-agent-be/prod:0-0000000 # {"$imagepolicy": "flux-system:job-agent-be"}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000
+          startupProbe:
+            tcpSocket:
+              port: 8000
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 30
+          readinessProbe:
+            tcpSocket:
+              port: 8000
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3
+          livenessProbe:
+            tcpSocket:
+              port: 8000
+            periodSeconds: 20
+            timeoutSeconds: 2
+            failureThreshold: 3
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "1Gi"
+              cpu: "1000m"
+          envFrom:
+            - configMapRef:
+                name: job-agent-be-config
+            - secretRef:
+                name: job-agent-be-secret

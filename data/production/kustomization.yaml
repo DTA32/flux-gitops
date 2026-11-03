@@ -3,3 +3,4 @@ kind: Kustomization
 resources:
   - postgres-postgis
   - redis
+  - mongo

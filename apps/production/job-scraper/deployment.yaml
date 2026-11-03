@@ -25,12 +25,30 @@ spec:
                     operator: In
                     values:
                       - spot
+      imagePullSecrets:
+        - name: ghcr-pull
       containers:
         - name: job-scraper-mcp
-          image: ghcr.io/pt-sinan-akbar/job-scraper-mcp:e65788e8
+          image: ghcr.io/orangemangodimz/job-scrapper:mcp-e4dda67e677a6c5121c9e63dd395fdd0aea88146
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 20
+            timeoutSeconds: 5
+            failureThreshold: 3
           envFrom:
             - configMapRef:
                 name: job-scraper-config
