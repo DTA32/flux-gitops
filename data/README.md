@@ -8,6 +8,7 @@ Flux Kustomization.
 | `production/postgres-postgis/`  | `prod`    | hostPath PV at `/mnt/data/postgres-postgis`, 10Gi | `data-production`  |
 | `development/postgres-postgis/` | `dev`     | dynamic `local-path` claim, 5Gi                   | `data-development` |
 | `production/redis/`             | `prod`    | dynamic `local-path` claim per pod, 1Gi           | `data-production`  |
+| `production/mongo/`             | `prod`    | dynamic `local-path` claim per pod, 5Gi           | `data-production`  |
 | `development/redis/`            | `dev`     | dynamic `local-path` claim per pod, 1Gi           | `data-development` |
 
 **Why not inside `apps/`:** a bad reconcile or a stray `prune` under `apps` must never be able to

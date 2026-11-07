@@ -21,9 +21,11 @@ spec:
                         operator: In
                         values:
                           - high-availability
+          imagePullSecrets:
+            - name: ghcr-pull
           containers:
             - name: job-scraper-bot
-              image: ghcr.io/pt-sinan-akbar/job-scraper-bot:e65788e8
+              image: ghcr.io/orangemangodimz/job-scrapper:bot-e4dda67e677a6c5121c9e63dd395fdd0aea88146
               imagePullPolicy: IfNotPresent
               command:
                 - /bin/sh

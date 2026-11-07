@@ -10,6 +10,8 @@ resources:
   - bandung-coffeeshop-scraper
   - skripsi
   - job-scraper
+  - job-agent-be
+  - job-agent-fe
   - kawan-ngonser-be
   - kawan-ngonser-fe
   - ofgs-api

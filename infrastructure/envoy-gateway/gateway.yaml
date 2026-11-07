@@ -149,6 +149,19 @@ spec:
         namespaces:
           from: Same
 
+    - name: job-agent
+      protocol: HTTPS
+      port: 443
+      hostname: job-agent.dta32.my.id
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - kind: Secret
+            name: job-agent-tls
+      allowedRoutes:
+        namespaces:
+          from: Same
+
     - name: ci
       protocol: HTTPS
       port: 443

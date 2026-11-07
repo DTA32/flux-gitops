@@ -1,0 +1,27 @@
+# Governing service for the StatefulSet (stable pod DNS: mongo-0.mongo-headless).
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: prod
+  name: mongo-headless
+spec:
+  clusterIP: None
+  selector:
+    app: mongo
+  ports:
+    - name: mongo
+      port: 27017
+---
+# What clients connect to.
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: prod
+  name: mongo-service
+spec:
+  selector:
+    app: mongo
+  type: ClusterIP
+  ports:
+    - name: mongo
+      port: 27017

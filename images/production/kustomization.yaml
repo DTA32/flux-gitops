@@ -6,6 +6,8 @@ resources:
   - bandung-coffeeshop-fe.yaml
   - bandung-coffeeshop-image.yaml
   - bandung-coffeeshop-scraper.yaml
+  - job-agent-be.yaml
+  - job-agent-fe.yaml
 #  - job-scraper-bot.yaml
 #  - job-scraper-mcp.yaml
   - kawan-ngonser-be.yaml
