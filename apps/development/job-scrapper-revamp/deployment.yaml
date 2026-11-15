@@ -1,6 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: dev
   name: job-scrapper-revamp-mcp
   labels:
     app: job-scrapper-revamp-mcp

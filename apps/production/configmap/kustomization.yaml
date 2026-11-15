@@ -41,3 +41,6 @@ configMapGenerator:
   - name: vern-config
     namespace: prod
     envs: [vern.env]
+  - name: job-scrapper-revamp-config
+    namespace: prod
+    envs: [job-scrapper-revamp.env]

@@ -1,6 +1,7 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
+  namespace: dev
   name: job-scrapper-revamp-bot
 spec:
   suspend: true

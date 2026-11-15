@@ -1,6 +1,7 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
+  namespace: prod
   name: job-scrapper-revamp-bot
 spec:
   schedule: "0 8,20 * * *"

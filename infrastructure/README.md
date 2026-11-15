@@ -6,7 +6,7 @@ woodpecker route. Reconciled by the `infrastructure` Kustomization, which everyt
 
 | Path | What |
 |---|---|
-| `namespaces.yaml` | the `prod` and `dev` namespaces, and `job-scrapper-revamp` and `job-scrapper-revamp-dev` for job-agent's revamped scraper |
+| `namespaces.yaml` | the `prod` and `dev` namespaces |
 | `envoy-gateway/namespace.yaml` | `envoy` — the Gateway, every HTTPRoute, and the TLS secrets |
 | `envoy-gateway/gatewayclass.yaml` | GatewayClass for the Envoy Gateway controller |
 | `envoy-gateway/gateway.yaml` | `main-gateway`: `:80` plus one `:443` listener per hostname |
