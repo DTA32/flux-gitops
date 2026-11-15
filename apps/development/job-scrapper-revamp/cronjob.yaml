@@ -25,7 +25,7 @@ spec:
             - name: ghcr-pull
           containers:
             - name: job-scrapper-revamp-bot
-              image: ghcr.io/pt-sinan-akbar/job-scraper-bot/dev:0-0000000 # {"$imagepolicy": "flux-system:job-scrapper-revamp-bot-dev"}
+              image: ghcr.io/pt-sinan-akbar/job-scraper-bot/dev:1794680377-3a226dd
               imagePullPolicy: IfNotPresent
               command:
                 - /bin/sh
