@@ -8,3 +8,9 @@ configMapGenerator:
   - name: bandung-coffeeshop-fe-config
     namespace: dev
     envs: [bandung-coffeeshop-fe.env]
+  - name: job-agent-be-config
+    namespace: dev
+    envs: [job-agent-be.env]
+  - name: job-scrapper-revamp-config
+    namespace: dev
+    envs: [job-scrapper-revamp.env]

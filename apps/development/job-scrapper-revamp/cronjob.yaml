@@ -1,0 +1,39 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  namespace: dev
+  name: job-scrapper-revamp-bot
+spec:
+  suspend: true
+  schedule: "0 8,20 * * *"
+  timeZone: "Asia/Jakarta"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          affinity:
+            nodeAffinity:
+              preferredDuringSchedulingIgnoredDuringExecution:
+                - weight: 100
+                  preference:
+                    matchExpressions:
+                      - key: node_type
+                        operator: In
+                        values:
+                          - high-availability
+          imagePullSecrets:
+            - name: ghcr-pull
+          containers:
+            - name: job-scrapper-revamp-bot
+              image: ghcr.io/pt-sinan-akbar/job-scraper-bot/dev:1794680377-3a226dd # {"$imagepolicy": "flux-system:job-scrapper-revamp-bot-dev"}
+              imagePullPolicy: IfNotPresent
+              command:
+                - /bin/sh
+                - /workspace/scraper-bot/cron/run-scheduled-scraper.sh
+              envFrom:
+                - configMapRef:
+                    name: job-scrapper-revamp-config
+                - secretRef:
+                    name: job-scrapper-revamp-secret
+          restartPolicy: OnFailure

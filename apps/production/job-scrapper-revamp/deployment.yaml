@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: prod
+  name: job-scrapper-revamp-mcp
+  labels:
+    app: job-scrapper-revamp-mcp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: job-scrapper-revamp-mcp
+  template:
+    metadata:
+      labels:
+        app: job-scrapper-revamp-mcp
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: node_type
+                    operator: In
+                    values:
+                      - spot
+      imagePullSecrets:
+        - name: ghcr-pull
+      containers:
+        - name: job-scrapper-revamp-mcp
+          image: ghcr.io/pt-sinan-akbar/job-scraper-mcp/prod:1794680922-fc734bf # {"$imagepolicy": "flux-system:job-scrapper-revamp-mcp"}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 20
+            timeoutSeconds: 5
+            failureThreshold: 3
+          envFrom:
+            - configMapRef:
+                name: job-scrapper-revamp-config
+            - secretRef:
+                name: job-scrapper-revamp-secret

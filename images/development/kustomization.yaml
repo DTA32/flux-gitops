@@ -3,3 +3,7 @@ kind: Kustomization
 resources:
   - bandung-coffeeshop-be.yaml
   - bandung-coffeeshop-fe.yaml
+  - job-agent-fe.yaml
+  - job-agent-be.yaml
+  - job-scrapper-revamp-bot.yaml
+  - job-scrapper-revamp-mcp.yaml

@@ -23,6 +23,9 @@ configMapGenerator:
   - name: job-scraper-config
     namespace: prod
     envs: [job-scraper.env]
+  - name: job-agent-be-config
+    namespace: prod
+    envs: [job-agent-be.env]
   - name: kawan-ngonser-be-config
     namespace: prod
     envs: [kawan-ngonser-be.env]
@@ -38,3 +41,6 @@ configMapGenerator:
   - name: vern-config
     namespace: prod
     envs: [vern.env]
+  - name: job-scrapper-revamp-config
+    namespace: prod
+    envs: [job-scrapper-revamp.env]
