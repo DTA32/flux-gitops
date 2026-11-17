@@ -4,6 +4,7 @@ metadata:
   namespace: prod
   name: job-scrapper-revamp-bot
 spec:
+  suspend: true
   schedule: "0 8,20 * * *"
   timeZone: "Asia/Jakarta"
   concurrencyPolicy: Forbid
