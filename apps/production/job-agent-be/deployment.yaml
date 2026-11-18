@@ -19,7 +19,7 @@ spec:
         - name: ghcr-pull
       containers:
         - name: job-agent-be
-          image: ghcr.io/pt-sinan-akbar/job-agent-be/prod:1794842334-2de8312 # {"$imagepolicy": "flux-system:job-agent-be"}
+          image: ghcr.io/pt-sinan-akbar/job-agent-be/prod:1795016264-841ce42 # {"$imagepolicy": "flux-system:job-agent-be"}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8000
