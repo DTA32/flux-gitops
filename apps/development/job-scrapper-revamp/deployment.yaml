@@ -61,3 +61,43 @@ spec:
                 name: job-scrapper-revamp-config
             - secretRef:
                 name: job-scrapper-revamp-secret
+        - name: job-scrapper-revamp-ui
+          image: ghcr.io/pt-sinan-akbar/job-scraper-mcp/dev:1794680377-3a226dd # {"$imagepolicy": "flux-system:job-scrapper-revamp-mcp-dev"}
+          imagePullPolicy: IfNotPresent
+          command: ["python", "-m", "backend"]
+          ports:
+            - containerPort: 8090
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8090
+              httpHeaders:
+                - name: Host
+                  value: localhost
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8090
+              httpHeaders:
+                - name: Host
+                  value: localhost
+            initialDelaySeconds: 20
+            periodSeconds: 20
+            timeoutSeconds: 5
+            failureThreshold: 3
+          envFrom:
+            - configMapRef:
+                name: job-scrapper-revamp-config
+            - secretRef:
+                name: job-scrapper-revamp-secret

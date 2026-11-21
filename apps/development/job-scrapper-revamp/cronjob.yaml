@@ -8,8 +8,12 @@ spec:
   schedule: "0 8,20 * * *"
   timeZone: "Asia/Jakarta"
   concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
   jobTemplate:
     spec:
+      backoffLimit: 0
+      activeDeadlineSeconds: 2100
       template:
         spec:
           affinity:
@@ -26,14 +30,25 @@ spec:
             - name: ghcr-pull
           containers:
             - name: job-scrapper-revamp-bot
-              image: ghcr.io/pt-sinan-akbar/job-scraper-bot/dev:1794680377-3a226dd # {"$imagepolicy": "flux-system:job-scrapper-revamp-bot-dev"}
+              image: ghcr.io/pt-sinan-akbar/job-scraper-mcp/dev:1794680377-3a226dd # {"$imagepolicy": "flux-system:job-scrapper-revamp-mcp-dev"}
               imagePullPolicy: IfNotPresent
               command:
-                - /bin/sh
-                - /workspace/scraper-bot/cron/run-scheduled-scraper.sh
-              envFrom:
-                - configMapRef:
-                    name: job-scrapper-revamp-config
-                - secretRef:
-                    name: job-scrapper-revamp-secret
-          restartPolicy: OnFailure
+                - /app/scripts/scrape-to-discord.sh
+              args:
+                - software engineer
+              env:
+                - name: SCRAPER_UI_URL
+                  value: http://job-scrapper-revamp-mcp-service.dev.svc.cluster.local:8090
+                - name: AUTH_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: job-scrapper-revamp-secret
+                      key: AUTH_TOKEN
+              resources:
+                requests:
+                  memory: "32Mi"
+                  cpu: "10m"
+                limits:
+                  memory: "128Mi"
+                  cpu: "100m"
+          restartPolicy: Never
