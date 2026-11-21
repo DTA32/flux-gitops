@@ -30,7 +30,7 @@ spec:
             - name: ghcr-pull
           containers:
             - name: job-scrapper-revamp-bot
-              image: ghcr.io/pt-sinan-akbar/job-scraper-mcp/prod:1794680922-fc734bf # {"$imagepolicy": "flux-system:job-scrapper-revamp-mcp"}
+              image: ghcr.io/pt-sinan-akbar/job-scraper/prod:1795269380-3361eb3 # {"$imagepolicy": "flux-system:job-scrapper-revamp-mcp"}
               imagePullPolicy: IfNotPresent
               command:
                 - /app/scripts/scrape-to-discord.sh

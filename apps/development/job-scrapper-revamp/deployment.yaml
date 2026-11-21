@@ -28,11 +28,14 @@ spec:
       imagePullSecrets:
         - name: ghcr-pull
       containers:
-        - name: job-scrapper-revamp-mcp
-          image: ghcr.io/pt-sinan-akbar/job-scraper-mcp/dev:1794680377-3a226dd # {"$imagepolicy": "flux-system:job-scrapper-revamp-mcp-dev"}
+        - name: job-scrapper-revamp
+          image: ghcr.io/pt-sinan-akbar/job-scraper/dev:1795269380-3361eb3 # {"$imagepolicy": "flux-system:job-scrapper-revamp-mcp-dev"}
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 8080
+            - name: mcp
+              containerPort: 8080
+            - name: ui
+              containerPort: 8090
           resources:
             requests:
               memory: "256Mi"
@@ -44,43 +47,6 @@ spec:
             httpGet:
               path: /health
               port: 8080
-            initialDelaySeconds: 10
-            periodSeconds: 15
-            timeoutSeconds: 5
-            failureThreshold: 3
-          livenessProbe:
-            httpGet:
-              path: /health
-              port: 8080
-            initialDelaySeconds: 20
-            periodSeconds: 20
-            timeoutSeconds: 5
-            failureThreshold: 3
-          envFrom:
-            - configMapRef:
-                name: job-scrapper-revamp-config
-            - secretRef:
-                name: job-scrapper-revamp-secret
-        - name: job-scrapper-revamp-ui
-          image: ghcr.io/pt-sinan-akbar/job-scraper-mcp/dev:1794680377-3a226dd # {"$imagepolicy": "flux-system:job-scrapper-revamp-mcp-dev"}
-          imagePullPolicy: IfNotPresent
-          command: ["python", "-m", "backend"]
-          ports:
-            - containerPort: 8090
-          resources:
-            requests:
-              memory: "256Mi"
-              cpu: "100m"
-            limits:
-              memory: "1Gi"
-              cpu: "500m"
-          readinessProbe:
-            httpGet:
-              path: /health
-              port: 8090
-              httpHeaders:
-                - name: Host
-                  value: localhost
             initialDelaySeconds: 10
             periodSeconds: 15
             timeoutSeconds: 5
