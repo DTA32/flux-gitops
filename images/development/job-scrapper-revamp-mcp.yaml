@@ -4,7 +4,7 @@ metadata:
   name: job-scrapper-revamp-mcp-dev
   namespace: flux-system
 spec:
-  image: ghcr.io/pt-sinan-akbar/job-scraper-mcp/dev
+  image: ghcr.io/pt-sinan-akbar/job-scraper/dev
   interval: 10m
   secretRef:
     name: flux-registry-creds

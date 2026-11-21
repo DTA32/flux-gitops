@@ -28,11 +28,14 @@ spec:
       imagePullSecrets:
         - name: ghcr-pull
       containers:
-        - name: job-scrapper-revamp-mcp
-          image: ghcr.io/pt-sinan-akbar/job-scraper-mcp/dev:1794680377-3a226dd # {"$imagepolicy": "flux-system:job-scrapper-revamp-mcp-dev"}
+        - name: job-scrapper-revamp
+          image: ghcr.io/pt-sinan-akbar/job-scraper/dev:1795269380-3361eb3 # {"$imagepolicy": "flux-system:job-scrapper-revamp-mcp-dev"}
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 8080
+            - name: mcp
+              containerPort: 8080
+            - name: ui
+              containerPort: 8090
           resources:
             requests:
               memory: "256Mi"
@@ -51,7 +54,10 @@ spec:
           livenessProbe:
             httpGet:
               path: /health
-              port: 8080
+              port: 8090
+              httpHeaders:
+                - name: Host
+                  value: localhost
             initialDelaySeconds: 20
             periodSeconds: 20
             timeoutSeconds: 5
