@@ -251,8 +251,8 @@ Key names come from what the manifests reference. Namespaces other than `flux-sy
 | `dev`         | `ghcr-pull`                          | `.dockerconfigjson` — ghcr.io login, classic PAT with `read:packages` only |
 | `dev`         | `job-agent-be-secret`                | `API_SECRET_KEY` `DATABASE_POSTGRES_DB` `DATABASE_POSTGRES_USER` `DATABASE_POSTGRES_PASSWORD` `CACHE_REDIS_URL` `DATABASE_MONGO_URI` `STORAGE_R2_*` |
 | `prod`        | `job-scraper-secret`                 | `MONGO_URI` (MongoDB Atlas) `DISCORD_WEBHOOK_URL` `SCRAPER_PROXY_URL`                                                                                                                                                                                                                                                                                                                           |
-| `prod`        | `job-scrapper-revamp-secret`         | `MONGO_URI` (MongoDB Atlas) `PROXY_URL` `DISCORD_BOT_TOKEN` `DISCORD_CHANNEL_ID` `CLAUDE_CODE_OAUTH_TOKEN` |
-| `dev`         | `job-scrapper-revamp-secret`         | `MONGO_URI` (MongoDB Atlas) `PROXY_URL` `DISCORD_BOT_TOKEN` `DISCORD_CHANNEL_ID` `CLAUDE_CODE_OAUTH_TOKEN` |
+| `prod`        | `job-scrapper-revamp-secret`         | `MONGO_URI` (MongoDB Atlas) `PROXY_URL` `AUTH_TOKEN` |
+| `dev`         | `job-scrapper-revamp-secret`         | `MONGO_URI` (MongoDB Atlas) `PROXY_URL` `AUTH_TOKEN` |
 
 `PGDATA` is a subdirectory of the volume mount, for example `/var/lib/postgresql/data/pgdata`.
 
