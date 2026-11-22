@@ -29,7 +29,7 @@ spec:
         - name: ghcr-pull
       containers:
         - name: job-scrapper-revamp
-          image: ghcr.io/pt-sinan-akbar/job-scraper/dev:1795269380-3361eb3 # {"$imagepolicy": "flux-system:job-scrapper-revamp-dev"}
+          image: ghcr.io/pt-sinan-akbar/job-scraper/dev:1795347580-a24e370 # {"$imagepolicy": "flux-system:job-scrapper-revamp-dev"}
           imagePullPolicy: IfNotPresent
           ports:
             - name: mcp
