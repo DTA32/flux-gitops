@@ -5,4 +5,4 @@ resources:
   - bandung-coffeeshop-fe.yaml
   - job-agent-fe.yaml
   - job-agent-be.yaml
-  - job-scrapper-revamp-mcp.yaml
+  - job-scrapper-revamp.yaml

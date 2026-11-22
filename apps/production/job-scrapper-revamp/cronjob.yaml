@@ -30,7 +30,7 @@ spec:
             - name: ghcr-pull
           containers:
             - name: job-scrapper-revamp-bot
-              image: ghcr.io/pt-sinan-akbar/job-scraper/prod:1795269380-3361eb3 # {"$imagepolicy": "flux-system:job-scrapper-revamp-mcp"}
+              image: ghcr.io/pt-sinan-akbar/job-scraper/prod:1795269380-3361eb3 # {"$imagepolicy": "flux-system:job-scrapper-revamp"}
               imagePullPolicy: IfNotPresent
               command:
                 - /app/scripts/scrape-to-discord.sh
@@ -38,7 +38,7 @@ spec:
                 - software engineer
               env:
                 - name: SCRAPER_UI_URL
-                  value: http://job-scrapper-revamp-mcp-service.prod.svc.cluster.local:8090
+                  value: http://job-scrapper-revamp-service.prod.svc.cluster.local:8090
                 - name: AUTH_TOKEN
                   valueFrom:
                     secretKeyRef:

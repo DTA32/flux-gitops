@@ -10,7 +10,7 @@ resources:
   - job-agent-fe.yaml
 #  - job-scraper-bot.yaml
 #  - job-scraper-mcp.yaml
-  - job-scrapper-revamp-mcp.yaml
+  - job-scrapper-revamp.yaml
   - kawan-ngonser-be.yaml
   - kawan-ngonser-fe.yaml
   - ofgs-api.yaml
