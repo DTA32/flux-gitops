@@ -6,7 +6,7 @@ metadata:
   labels:
     app: job-scrapper-revamp-mcp
 spec:
-  replicas: 0
+  replicas: 1
   selector:
     matchLabels:
       app: job-scrapper-revamp-mcp
