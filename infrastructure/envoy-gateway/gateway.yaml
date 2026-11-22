@@ -175,6 +175,32 @@ spec:
         namespaces:
           from: Same
 
+    - name: job-scraper
+      protocol: HTTPS
+      port: 443
+      hostname: job-scraper.dimasdanizaini.xyz
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - kind: Secret
+            name: job-scraper-tls
+      allowedRoutes:
+        namespaces:
+          from: Same
+
+    - name: dev-job-scraper
+      protocol: HTTPS
+      port: 443
+      hostname: dev.job-scraper.dimasdanizaini.xyz
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - kind: Secret
+            name: dev-job-scraper-tls
+      allowedRoutes:
+        namespaces:
+          from: Same
+
     - name: ci
       protocol: HTTPS
       port: 443
