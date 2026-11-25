@@ -35,7 +35,16 @@ spec:
               command:
                 - /app/scripts/scrape-to-discord.sh
               args:
+                - full stack engineer
                 - software engineer
+                - backend engineer
+                - frontend engineer
+                - devops engineer
+                - data analyst
+                - seo
+                - forward deployed engineer
+                - erp
+                - application developer
               env:
                 - name: SCRAPER_UI_URL
                   value: http://job-scrapper-revamp-service.dev.svc.cluster.local:8090
